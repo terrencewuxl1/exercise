@@ -1,8 +1,8 @@
 package com.leecode.pratice;
 
-import org.testng.annotations.Test;
 
-import java.io.File;
+import org.junit.Test;
+
 import java.util.*;
 
 public class Temp {
@@ -40,8 +40,6 @@ public class Temp {
         //Arrays.toString()
 //        Queue<Integer> small=new LinkedList<>(Comparator.reverseOrder());
         int[] temp=new int[2];
-
-        File
 
 
 

@@ -8,7 +8,7 @@ public class Game {
     CardSet cardSet;
 
     public Game(){
-        players=new ArrayList<>();
+        players=new ArrayList<Player>();
         cardSet=new CardSet();
     }
 

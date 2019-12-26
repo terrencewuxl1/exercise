@@ -1,6 +1,7 @@
 package com.leecode.pratice;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 public class Rotate {
     public void rotate(int[] nums, int k) {
