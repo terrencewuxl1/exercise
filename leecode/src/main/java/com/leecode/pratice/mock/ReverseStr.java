@@ -1,6 +1,6 @@
 package com.leecode.pratice.mock;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 public class ReverseStr {
     public String reverseStr(String s, int k) {

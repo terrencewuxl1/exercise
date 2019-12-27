@@ -1,6 +1,6 @@
 package com.leecode.pratice;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 public class MoveZeroes {
     public void moveZeroes(int[] nums) {

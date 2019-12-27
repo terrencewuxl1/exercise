@@ -1,6 +1,6 @@
 package com.leecode.pratice;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
