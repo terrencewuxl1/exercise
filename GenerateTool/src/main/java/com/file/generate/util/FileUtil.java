@@ -2,10 +2,9 @@ package com.file.generate.util;
 
 import com.file.generate.info.UserInfo;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,19 +12,8 @@ import java.util.Scanner;
 
 public class FileUtil {
 
-    private static FileUtil fileUtil = null;
 
-    private FileUtil() {
-    }
-
-    public static FileUtil getInstance() {
-        if (fileUtil == null)
-            fileUtil = new FileUtil();
-
-        return fileUtil;
-    }
-
-    public List<String> readFromFile(String fileName) throws FileNotFoundException {
+    public List<String> readFileToLines(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         List<String> lines = new ArrayList<>();
         Scanner scar = new Scanner(file);
@@ -36,8 +24,12 @@ public class FileUtil {
         return lines;
     }
 
+    public String readFileToString(String fileName) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(fileName)));
+    }
+
     public List<UserInfo> readUserInfoFile(String fileName) throws FileNotFoundException {
-        List<String> contents = readFromFile(fileName);
+        List<String> contents = readFileToLines(fileName);
         List<String> keys = Arrays.asList(contents.get(0).split(","));
         List<UserInfo> userIfs = new ArrayList<>();
         for (int i = 1; i < contents.size(); i++) {
@@ -47,17 +39,20 @@ public class FileUtil {
         return userIfs;
     }
 
-    public void writeToFile(List<List<String>> contents, String fileName) throws IOException {
-        FileWriter fileWriter = new FileWriter(fileName);
-        for (List<String> content : contents) {
-            fileWriter.write("########################################################");
-            fileWriter.write("");
-            for (String sentence : content) {
-                fileWriter.write(sentence);
-            }
-            fileWriter.write("");
+    public void writeToFile(List<String> contents, String fileName) throws IOException {
+
+        FileOutputStream fos = new FileOutputStream(fileName);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+        for (String content : contents) {
+            bw.write("-----------------------------------------------------");
+            bw.newLine();
+            bw.newLine();
+            bw.write(content);
+            bw.newLine();
+            bw.newLine();
         }
-        fileWriter.close();
+        bw.close();
+        fos.close();
     }
 
     public String getTargetFileName(String sourceFileName) {

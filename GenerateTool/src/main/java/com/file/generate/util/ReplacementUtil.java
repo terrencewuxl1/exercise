@@ -8,31 +8,30 @@ import java.util.List;
 
 public class ReplacementUtil {
 
-    public List<String> replaceContentByUser(List<String> content, UserInfo userInfo) {
-        List<String> newContent = new ArrayList<>();
+    public String replaceContentByUser(String content, UserInfo userInfo) {
         for (String key : userInfo.getInfoKeys()) {
-            for (String statement : content) {
-                String newStatement = statement;
-                newContent.add(newStatement.replaceAll("<" + key + ">", userInfo.getInfoMap().get(key)));
-            }
+            content = content.replaceAll("<" + key + ">", userInfo.getInfoMap().get(key));
         }
-        return newContent;
+        return content;
     }
 
-    public List<List<String>> replaceContent(List<UserInfo> userInfos, List<String> templateContent) {
-        List<List<String>> newContents = new ArrayList<>();
+
+    public List<String> replaceContent(List<UserInfo> userInfos, String templateContent) {
+        List<String> newContents = new ArrayList<>();
         for (UserInfo userInfo : userInfos) {
             newContents.add(replaceContentByUser(templateContent, userInfo));
+            System.out.println(userInfo.getInfoMap().toString() + "  information populated.");
         }
         return newContents;
     }
 
     public void generateNewSQLFile(String userInfoFileName, String templateFileName) throws IOException {
-        FileUtil fileUtil = FileUtil.getInstance();
-        List<String> templateContent = fileUtil.readFromFile(templateFileName);
+        FileUtil fileUtil = new FileUtil();
+        String templateContent = fileUtil.readFileToString(templateFileName);
         List<UserInfo> userIfs = fileUtil.readUserInfoFile(userInfoFileName);
-        fileUtil.writeToFile(replaceContent(userIfs, templateContent), fileUtil.getTargetFileName(templateFileName));
-
+        String targetFileName = fileUtil.getTargetFileName(templateFileName);
+        fileUtil.writeToFile(replaceContent(userIfs, templateContent), targetFileName);
+        System.out.println("Write to file " + targetFileName + " finished.");
     }
 
 
