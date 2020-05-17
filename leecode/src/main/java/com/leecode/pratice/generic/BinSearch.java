@@ -16,15 +16,14 @@ public class BinSearch{
     }
 
     public static <T extends Comparable<T>> int search(T[] table, T searchKey){
+        Arrays.sort(table);
         return search(table,0,table.length-1,searchKey);
     }
 
     public static void main(String[] args){
         Integer[] arr1=new Integer[]{12,32,143,3,432,565,66,78,97};
-        Arrays.sort(arr1);
-        System.out.println(BinSearch.search(arr1,99));
+        System.out.println(BinSearch.search(arr1,78));
         Character[] arr2=new Character[]{'a','f','r','g','l','d'};
-        Arrays.sort(arr2);
         System.out.println(BinSearch.search(arr2,'g'));
         Tire compactTire=new Tire(15);
         Tire suvTire=new Tire(17);
