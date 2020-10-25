@@ -9,8 +9,8 @@ public class SnakeGame {
         public Point(int r,int c){
             row=r;
             col=c;
-            Random r=new Random();
-            int i=r.nextInt(50);
+            Random random=new Random();
+            int i=random.nextInt(50);
         }
 
         @Override
@@ -70,7 +70,7 @@ public class SnakeGame {
             if(fi++== foods.length){
                 return eat;
             }
-            Point nextFood=new Point(foods)
+            Point nextFood=new Point(foods[fi][0],foods[fi][1]);
         }else {
             set.remove(q.poll());
         }
