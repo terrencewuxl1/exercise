@@ -7,7 +7,6 @@ import java.util.*;
 public class Solutions {
 
     int maxLength = 0;
-    Stack<Integer> stack = new Stack();
 
     public static void main(String[] args) {
         Solutions s = new Solutions();
