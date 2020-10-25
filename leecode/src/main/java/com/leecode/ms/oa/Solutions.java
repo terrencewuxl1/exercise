@@ -1,10 +1,23 @@
 package com.leecode.ms.oa;
 
+import com.leecode.pratice.TreeNode;
+
 import java.util.*;
 
 public class Solutions {
 
     int maxLength = 0;
+    Stack<Integer> stack = new Stack();
+
+    public static void main(String[] args) {
+        Solutions s = new Solutions();
+        int[] x1 = { 1, 1, 2 }, y1 = { 3, 2, 3 };
+        int[] x2 = { 1, 1, 1 }, y2 = { 2, 2, 2 };
+        int[] x3 = { 1, 2, 3, 1, 2, 12, 8, 4 }, y3 = { 5, 10, 15, 2, 4, 15, 10, 5 };
+        System.out.println(s.numberOfSumUpToOne(x1, y1));
+        System.out.println(s.numberOfSumUpToOne(x2, y2));
+        System.out.println(s.numberOfSumUpToOne(x3, y3));
+    }
 
     int without3Letters(String s) {
         if (s == null || s.length() <= 2) return 0;
@@ -177,6 +190,18 @@ public class Solutions {
         }
     }
 
+//    int adjacentSwapToRed(String s){
+//        int l=0,r=s.length()-1,lr=-1,rr=-1,maxSwap=0;
+//        while (l<=r){
+//            if(s.)
+//            if(s.charAt(l)=='R')lr=l;
+//            if(s.charAt(r)=='R')rr=r;
+//            if(s.charAt(l)=='W'&&lr!=-1){
+//
+//            }
+//        }
+//    }
+
     boolean selfDuplicate(String s) {
         Set<Character> set = new HashSet<>();
         for (char c : s.toCharArray()) {
@@ -196,18 +221,6 @@ public class Solutions {
         }
         return maxK;
     }
-
-//    int adjacentSwapToRed(String s){
-//        int l=0,r=s.length()-1,lr=-1,rr=-1,maxSwap=0;
-//        while (l<=r){
-//            if(s.)
-//            if(s.charAt(l)=='R')lr=l;
-//            if(s.charAt(r)=='R')rr=r;
-//            if(s.charAt(l)=='W'&&lr!=-1){
-//
-//            }
-//        }
-//    }
 
     public int[] sumZero(int n) {
         int[] arr = new int[n];
@@ -274,5 +287,222 @@ public class Solutions {
         return res;
     }
 
+    int widestPathWithoutTree(int[] X, int[] Y) {
+        Arrays.sort(X);
+        int width = 0;
+        for (int i = 1; i < X.length; i++) {
+            width = Math.max(width, X[i] - X[i - 1]);
+        }
+        return width;
+    }
 
+    boolean jumpGame(int[] A, int index) {
+        if (index < 0 || index >= A.length) return false;
+        if (A[index] == 0) return true;
+        return jumpGame(A, index - A[index]) || jumpGame(A, index + A[index]);
+    }
+
+    int fairIndexNumber(int[] A, int[] B) {
+        int sumA = 0, sumB = 0, res = 0, N = A.length;
+        int[] dpA = new int[N + 1], dpB = new int[N + 1];
+        for (int i = 0; i < N; i++) {
+            sumA += A[i];
+            sumB += B[i];
+        }
+        if (sumA != sumB) return 0;
+        for (int i = 0; i < N; i++) {
+            dpA[i + 1] = dpA[i] + A[i];
+            dpB[i + 1] = dpB[i] + B[i];
+            if (dpA[i + 1] == dpB[i + 1] && sumA - dpA[i + 1] == dpA[i + 1] && sumB - dpB[i + 1] == dpB[i + 1])
+                res++;
+        }
+        return res;
+    }
+
+    int minMeetingRoom(int[][] intervals) {
+        if (intervals.length == 0) return 0;
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        PriorityQueue<Integer> endqueue = new PriorityQueue<>();
+        endqueue.offer(intervals[0][1]);
+        for (int i = 0; i < intervals.length; i++) {
+            if (intervals[i][0] > endqueue.peek()) {
+                endqueue.poll();
+            }
+            endqueue.offer(intervals[i][1]);
+        }
+        return endqueue.size();
+    }
+
+    int shineBulb(int[] A) {
+        int res = 0, sum = 0, target = 0;
+        for (int i = 0; i < A.length; i++) {
+            sum += A[i];
+            target += i + 1;
+            if (sum == target) res++;
+        }
+        return res;
+    }
+
+    String cropWord(String s, int K) {
+        s = s.trim();
+        if (K >= s.length()) return s;
+        String res = s.substring(0, K);
+        if (s.charAt(K) == ' ') return res.trim();
+        int lastBlank = res.lastIndexOf(' ');
+        return (lastBlank == -1) ? "" : res.substring(0, lastBlank).trim();
+    }
+
+    int maxChunkToSort(int[] A) {
+        int n = A.length;
+        int[] minRight = new int[n + 1];
+        minRight[n] = Integer.MAX_VALUE;
+        for (int i = n - 1; i >= 0; i--) {
+            minRight[i] = Math.min(A[i], minRight[i + 1]);
+        }
+        int max = Integer.MAX_VALUE, res = 0;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, A[i]);
+            if (max <= minRight[i + 1])
+                res++;
+        }
+        return res;
+    }
+
+    int MaxXOccurXTimes(int[] A) {
+        int N = A.length, res = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] > N) continue;
+            map.put(A[i], map.getOrDefault(A[i], 0) + 1);
+        }
+        for (Integer i : map.keySet()) {
+            if (i == map.get(i)) res = Math.max(res, i);
+        }
+        return res;
+    }
+
+    int MAligedSubset(int[] A, int M) {
+        if (A == null || A.length == 0) return 0;
+        int[] subset = new int[M];
+        int res = 0;
+        for (int i : A) {
+            int index = i < 0 ? i % M + M : i % M;
+            subset[index]++;
+            res = Math.max(subset[index], res);
+        }
+        return res;
+    }
+
+    int minCostGetStringWithoutConsecutive(String s, int[] C) {
+        if (s == null) return 0;
+        int res = 0;
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                res += Math.min(C[i], C[i - 1]);
+                C[i] = Math.max(C[i], C[i - 1]);
+            }
+        }
+        return res;
+    }
+
+    String riddle(String s) {
+        char[] arr = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+        StringBuilder sb = new StringBuilder();
+        char last = 'a', next;
+        for (int i = 0; i < s.length(); i++) {
+            char curr = s.charAt(i);
+            if (curr == '?') {
+                if (i == s.length() - 1 || s.charAt(i + 1) == '?')
+                    next = 'a';
+                else
+                    next = s.charAt(i + 1);
+                curr = arr[(Math.max(last - 'a', next - 'a') + 1) % arr.length];
+            }
+            sb.append(curr);
+            last = curr;
+        }
+        return sb.toString();
+    }
+
+    int visibleNode(TreeNode root) {
+        return traverse(root, Integer.MAX_VALUE);
+    }
+
+    int traverse(TreeNode root, int max) {
+        if (root == null) return 0;
+        int res = 0;
+        if (root.val > max) {
+            res = 1;
+            max = root.val;
+        }
+        return res + traverse(root.left, max) + traverse(root.right, max);
+    }
+
+    int hoursValidation(int a, int b, int c, int d) {
+        int[] arr = {a, b, c, d};
+        Arrays.sort(arr);
+        return backtrack(arr, 0, new boolean[4], new int[4]);
+//         return res.size();
+    }
+
+    int backtrack(int[] arr, int index, boolean[] visited, int[] curr) {
+        if (index == 4) {
+            if (isHours(curr)) return 1;
+        }
+        int cnt = 0;
+        for (int i = 0; i < 4; i++) {
+            if (!visited[i]) {
+                if (i > 0 && arr[i] == arr[i - 1] && !visited[i - 1])
+                    continue;
+                curr[index] = arr[i];
+                visited[i] = true;
+                cnt += backtrack(arr, index + 1, visited, curr);
+                visited[i] = false;
+            }
+        }
+        return cnt;
+    }
+
+    boolean isHours(int[] curr) {
+        return curr[0] * 10 + curr[1] < 24 && curr[2] * 10 + curr[3] < 60;
+    }
+
+    int checkGames(String[] B) {
+
+        for (int a = 0; a < B.length; a++) {
+            for (int i = 0; i < B[0].length(); i++)
+                if (B[a].charAt(i) == 'O') {
+                    return Math.max(dfs(B, a - 2, i - 2, -1), dfs(B, a - 2, i + 2, 1));
+                }
+        }
+        return 0;
+    }
+
+
+    int dfs(String[] B, int i, int j, int direct) {
+        if (i < 0 || j < 0 || j >= B[0].length() || B[i].charAt(j) == 'X' || B[i + 1].charAt(j - direct) != 'X')
+            return 0;
+        return 1 + Math.max(dfs(B, i - 2, j - 2, -1), dfs(B, i - 2, j + 2, 1));
+    }
+
+    int numberOfSumUpToOne(int[] X,int[] Y){
+        int res=0;
+        for(int i=0;i<X.length;i++){
+            int gcd=gcd(Y[i],X[i]);
+            X[i]=X[i]/gcd;
+            Y[i]=Y[i]/gcd;
+        }
+        for(int i=0;i<X.length-1;i++){
+            for(int j=i+1;j<Y.length;j++){
+                if(Y[i]==Y[j]&&X[i]+X[j]==Y[i])
+                    res++;
+            }
+        }
+        return res;
+    }
+
+    int gcd(int x,int y){
+        if(y==0)return x;
+        return gcd(y,x%y);
+    }
 }
