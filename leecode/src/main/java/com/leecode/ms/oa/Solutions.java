@@ -10,9 +10,9 @@ public class Solutions {
 
     public static void main(String[] args) {
         Solutions s = new Solutions();
-        int[] x1 = { 1, 1, 2 }, y1 = { 3, 2, 3 };
-        int[] x2 = { 1, 1, 1 }, y2 = { 2, 2, 2 };
-        int[] x3 = { 1, 2, 3, 1, 2, 12, 8, 4 }, y3 = { 5, 10, 15, 2, 4, 15, 10, 5 };
+        int[] x1 = {1, 1, 2}, y1 = {3, 2, 3};
+        int[] x2 = {1, 1, 1}, y2 = {2, 2, 2};
+        int[] x3 = {1, 2, 3, 1, 2, 12, 8, 4}, y3 = {5, 10, 15, 2, 4, 15, 10, 5};
         System.out.println(s.numberOfSumUpToOne(x1, y1));
         System.out.println(s.numberOfSumUpToOne(x2, y2));
         System.out.println(s.numberOfSumUpToOne(x3, y3));
@@ -263,7 +263,7 @@ public class Solutions {
         return cnt;
     }
 
-    List partitionNSubset(int[] A, int N) {
+    List<List<Integer>> partitionNSubset(int[] A, int N) {
         PriorityQueue<LinkedList<Integer>> q = new PriorityQueue<>(Comparator.comparingInt(O -> O.getFirst()));
         List<List<Integer>> res = new LinkedList<>();
         for (int i = A.length - 1; i > A.length - N - 1; i--) {
@@ -323,11 +323,11 @@ public class Solutions {
         Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
         PriorityQueue<Integer> endqueue = new PriorityQueue<>();
         endqueue.offer(intervals[0][1]);
-        for (int i = 0; i < intervals.length; i++) {
-            if (intervals[i][0] > endqueue.peek()) {
+        for (int[] interval : intervals) {
+            if (interval[0] > endqueue.peek()) {
                 endqueue.poll();
             }
-            endqueue.offer(intervals[i][1]);
+            endqueue.offer(interval[1]);
         }
         return endqueue.size();
     }
@@ -484,24 +484,48 @@ public class Solutions {
         return 1 + Math.max(dfs(B, i - 2, j - 2, -1), dfs(B, i - 2, j + 2, 1));
     }
 
-    int numberOfSumUpToOne(int[] X,int[] Y){
-        int res=0;
-        for(int i=0;i<X.length;i++){
-            int gcd=gcd(Y[i],X[i]);
-            X[i]=X[i]/gcd;
-            Y[i]=Y[i]/gcd;
+    int numberOfSumUpToOne(int[] X, int[] Y) {
+        int res = 0;
+        for (int i = 0; i < X.length; i++) {
+            int gcd = gcd(Y[i], X[i]);
+            X[i] = X[i] / gcd;
+            Y[i] = Y[i] / gcd;
         }
-        for(int i=0;i<X.length-1;i++){
-            for(int j=i+1;j<Y.length;j++){
-                if(Y[i]==Y[j]&&X[i]+X[j]==Y[i])
+        for (int i = 0; i < X.length - 1; i++) {
+            for (int j = i + 1; j < Y.length; j++) {
+                if (Y[i] == Y[j] && X[i] + X[j] == Y[i])
                     res++;
             }
         }
         return res;
     }
 
-    int gcd(int x,int y){
-        if(y==0)return x;
-        return gcd(y,x%y);
+    int gcd(int x, int y) {
+        if (y == 0) return x;
+        return gcd(y, x % y);
+    }
+
+    int minSwapToGroupRedBall(String s){
+        int left=0,right=s.length()-1;
+        while (s.charAt(left)=='W'){
+            left++;
+        }
+        while (s.charAt(right)=='W'){
+            right--;
+        }
+        int i=left,res=0;
+        while (i<right){
+            if(s.charAt(i)=='W'){
+                if(i-left>right-i){
+                    res+=right-i;
+                    right--;
+                }else {
+                    res+=i-left;
+                    left++;
+                }
+            }
+            if(res>1000000000)return -1;
+        }
+        return res;
     }
 }
