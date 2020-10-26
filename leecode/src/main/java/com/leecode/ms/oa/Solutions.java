@@ -10,12 +10,9 @@ public class Solutions {
 
     public static void main(String[] args) {
         Solutions s = new Solutions();
-        int[] x1 = {1, 1, 2}, y1 = {3, 2, 3};
-        int[] x2 = {1, 1, 1}, y2 = {2, 2, 2};
-        int[] x3 = {1, 2, 3, 1, 2, 12, 8, 4}, y3 = {5, 10, 15, 2, 4, 15, 10, 5};
-        System.out.println(s.numberOfSumUpToOne(x1, y1));
-        System.out.println(s.numberOfSumUpToOne(x2, y2));
-        System.out.println(s.numberOfSumUpToOne(x3, y3));
+        System.out.println(s.minDeleteToUniqueFrequency("example"));
+        // System.out.println(Arrays.toString(s.minDeleteToUniqueFrequency(3, 20)));
+//        System.out.println(Arrays.toString(s.minDeleteToUniqueFrequency(5, 6)));
     }
 
     int without3Letters(String s) {
@@ -188,18 +185,6 @@ public class Solutions {
             }
         }
     }
-
-//    int adjacentSwapToRed(String s){
-//        int l=0,r=s.length()-1,lr=-1,rr=-1,maxSwap=0;
-//        while (l<=r){
-//            if(s.)
-//            if(s.charAt(l)=='R')lr=l;
-//            if(s.charAt(r)=='R')rr=r;
-//            if(s.charAt(l)=='W'&&lr!=-1){
-//
-//            }
-//        }
-//    }
 
     boolean selfDuplicate(String s) {
         Set<Character> set = new HashSet<>();
@@ -493,7 +478,7 @@ public class Solutions {
         }
         for (int i = 0; i < X.length - 1; i++) {
             for (int j = i + 1; j < Y.length; j++) {
-                if (Y[i] == Y[j] && X[i] + X[j] == Y[i])
+                if (i != j && Y[i] == Y[j] && X[i] + X[j] == Y[i])
                     res++;
             }
         }
@@ -505,26 +490,80 @@ public class Solutions {
         return gcd(y, x % y);
     }
 
-    int minSwapToGroupRedBall(String s){
-        int left=0,right=s.length()-1;
-        while (s.charAt(left)=='W'){
+    int minSwapToGroupRedBall(String s) {
+        int left = 0, right = s.length() - 1;
+        while (s.charAt(left) == 'W') {
             left++;
         }
-        while (s.charAt(right)=='W'){
+        while (s.charAt(right) == 'W') {
             right--;
         }
-        int i=left,res=0;
-        while (i<right){
-            if(s.charAt(i)=='W'){
-                if(i-left>right-i){
-                    res+=right-i;
+        int i = left, res = 0;
+        while (i < right) {
+            if (s.charAt(i) == 'W') {
+                if (i - left > right - i) {
+                    res += right - i;
                     right--;
-                }else {
-                    res+=i-left;
+                } else {
+                    res += i - left;
                     left++;
                 }
             }
-            if(res>1000000000)return -1;
+            if (res > 1000000000) return -1;
+        }
+        return res;
+    }
+
+    String[] findKSmallestWordsOfLengthN(int N, int K) {
+        char[] arr = {'a', 'b', 'c'};
+        List<String> res = new ArrayList<>();
+        backtrack(arr, new StringBuilder(), 0, ' ', N, K, res);
+        return res.toArray(new String[res.size()]);
+    }
+
+    void backtrack(char[] arr, StringBuilder curr, int length, char last, int N, int K, List<String> res) {
+        if (length == N) {
+            res.add(curr.toString());
+            return;
+        }
+        for (int i = 0; i < 3; i++) {
+            if (arr[i] != last) {
+                curr.append(arr[i]);
+                backtrack(arr, curr, length + 1, arr[i], N, K, res);
+                if (res.size() == K) break;
+                curr.deleteCharAt(length);
+            }
+        }
+    }
+
+    boolean containsDifferByOne(int[] A) {
+        Set<Integer> set = new HashSet<>();
+        for (Integer i : A) {
+            if (set.contains(i - 1) || set.contains(i + 1))
+                return true;
+            set.add(i);
+        }
+        return false;
+    }
+
+    int minDeleteToUniqueFrequency(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        PriorityQueue<Integer> q = new PriorityQueue<>(Comparator.reverseOrder());
+        for (Integer i : map.values()) {
+            q.offer(i);
+        }
+        int res = 0, last = q.poll();
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            if (curr == last) {
+                res++;
+                if (curr - 1 > 0)
+                    q.offer(curr - 1);
+            }
+            last = curr;
         }
         return res;
     }
